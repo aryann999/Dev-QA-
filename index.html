@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Explore a simulated antivirus scan in the Aegis dashboard.">
+<title>Aegis | Antivirus Demo</title>
+<style>
+:root {color-scheme:dark;--mint:#74f4bc;--muted:#b0c0ce;--line:#283b49}
+* {box-sizing:border-box}
+[hidden] {display:none!important}
+body {margin:0;background:#09121b;color:#f5f8fc;font:1rem/1.6 system-ui,sans-serif}
+.wrap {width:min(1120px,calc(100% - 36px));margin:auto}
+header,footer {border-block-end:1px solid var(--line)}
+nav,footer .wrap {display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:18px 0}
+a {color:inherit;text-decoration:none}
+a:hover {color:var(--mint)}
+:focus-visible {outline:2px solid var(--mint);outline-offset:5px}
+.brand {font-size:1.2rem;font-weight:850;letter-spacing:.15em}
+.brand span,.label,h1 span {color:var(--mint)}
+.label {font:700 .875rem/1.5 ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase}
+.hero {display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,6vw,80px);align-items:center;padding:clamp(48px,9vw,104px) 0 64px}
+h1,h2,h3,p {margin:0}
+h1 {font-size:clamp(2.8rem,7vw,5.5rem);line-height:1;letter-spacing:-.065em;margin:16px 0 20px}
+p,footer {color:var(--muted)}
+.intro {max-width:36ch;font-size:1.12rem;margin-bottom:24px}
+.button {display:inline-block;border:0;border-radius:8px;padding:11px 17px;background:var(--mint);color:#07241a;font:inherit;font-weight:750;cursor:pointer}
+.button:hover {background:#b4ffe0;color:#07241a}
+.button:disabled {opacity:.6;cursor:wait}
+.panel,.card {background:#111e2a;border:1px solid var(--line);border-radius:16px}
+.panel {overflow:hidden}
+.panel-head,.panel-body,.card {padding:20px}
+.panel-head {border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.art {display:grid;place-items:center;min-height:235px;background:radial-gradient(ellipse at center,#235544,transparent 68%),repeating-linear-gradient(0deg,transparent 0 27px,#ffffff12 27px 28px),repeating-linear-gradient(90deg,transparent 0 27px,#ffffff12 27px 28px)}
+.orbit {width:155px;aspect-ratio:1;display:grid;place-items:center;border-radius:50%;border:1px solid #74f4bc66;box-shadow:0 0 0 20px #74f4bc16,0 0 0 37px #74f4bc0b}
+.shield {display:grid;place-items:center;width:84px;height:100px;background:linear-gradient(145deg,#a6ffdb,#39a887);color:#07241a;font-size:2.5rem;font-weight:800;clip-path:polygon(50% 0,100% 18%,94% 65%,77% 85%,50% 100%,23% 85%,6% 65%,0 18%)}
+.panel-body p {margin:6px 0 14px}
+progress {width:100%;height:10px;display:block;margin:0 0 16px;accent-color:var(--mint)}
+#features {padding-bottom:58px}
+#features h2 {font-size:clamp(1.7rem,4vw,2.4rem);margin-bottom:15px}
+.grid {display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card h3 {margin-bottom:5px}
+footer {border-block-start:1px solid var(--line);border-block-end:0}
+@media(max-width:740px) {.hero,.grid {grid-template-columns:1fr}.hero {padding-bottom:42px}}
+</style>
+</head>
+<body>
+<header><nav class="wrap" aria-label="Main navigation"><a class="brand" href="#"><span aria-hidden="true">◈</span> AEGIS</a><a href="#features">Features</a></nav></header>
+<main class="wrap">
+<section class="hero" aria-labelledby="title">
+<div>
+<p class="label">Antivirus dashboard demo</p>
+<h1 id="title">See how a security <span>scan works.</span></h1>
+<p class="intro">Explore an endpoint protection dashboard and follow a simulated scan from start to finish.</p>
+<a class="button" href="#scan">Explore the scan demo</a>
+</div>
+<section class="panel" id="scan" aria-labelledby="scan-title">
+<div class="panel-head"><h2 class="label" id="scan-title">Scan console</h2><span class="label">Demo mode</span></div>
+<div class="art" aria-hidden="true"><div class="orbit"><div class="shield">✓</div></div></div>
+<div class="panel-body">
+<div role="status"><strong id="state">Ready to scan</strong><p id="detail">Uses sample data. Your device files are never accessed.</p></div>
+<progress id="progress" value="0" max="100" aria-label="Demo scan progress"></progress>
+<button class="button" id="run" type="button" hidden>Run demo scan</button>
+<noscript><p>Enable JavaScript to run the simulation.</p></noscript>
+</div>
+</section>
+</section>
+<section id="features" aria-labelledby="features-title">
+<h2 id="features-title">How antivirus protection works</h2>
+<div class="grid">
+<article class="card"><h3>Scan</h3><p>Examine files, processes, and startup entries for suspicious activity.</p></article>
+<article class="card"><h3>Detect</h3><p>Flag suspicious items and show findings for review.</p></article>
+<article class="card"><h3>Quarantine</h3><p>Isolate suspicious files to prevent them from running while they are reviewed.</p></article>
+</div>
+</section>
+</main>
+<footer><div class="wrap"><span>Aegis</span><span>Antivirus interface concept</span></div></footer>
+<script>
+const run = document.querySelector('#run');
+const progress = document.querySelector('#progress');
+const state = document.querySelector('#state');
+const detail = document.querySelector('#detail');
+const stages = [
+  [0, 'Checking sample files…'],
+  [40, 'Checking sample processes…'],
+  [75, 'Checking sample startup entries…']
+];
+
+run.hidden = false;
+run.addEventListener('click', async () => {
+  run.disabled = true;
+  detail.textContent = 'Simulation in progress.';
+  for (const [percent, message] of stages) {
+    progress.value = percent;
+    state.textContent = message;
+    await new Promise(resolve => setTimeout(resolve, 650));
+  }
+  progress.value = 100;
+  state.textContent = 'Demo scan complete';
+  detail.textContent = 'Sample result: 120 items checked and 1 suspicious item flagged for review.';
+  run.textContent = 'Run again';
+  run.disabled = false;
+});
+</script>
+</body>
+</html>
